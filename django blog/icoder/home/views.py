@@ -25,3 +25,5 @@ def contact(request):
             messages.success(request, "Your message has been successfully sent")
     return render(request, 'home/contact.html')
     #return HttpResponse('This is contact')
+    def search (request):
+        return HttpResponse('This is search')
