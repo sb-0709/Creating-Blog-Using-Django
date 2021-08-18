@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, redirect
 from home.models import Contact
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -57,7 +57,7 @@ def handleSignup(request):
         myuser.last_name = lname
         myuser.save()
         messages.success(request,"Your iCoder account has been successfully created")
-        
+        return redirect('home')
     else:
         return HttpResponse(' 404 - Not Found')
        
