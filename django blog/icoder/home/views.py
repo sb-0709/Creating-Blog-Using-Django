@@ -38,3 +38,9 @@ def contact(request):
         params = {'allPosts' : allPosts, 'query': query}
         return render(request, 'home/search.html',params)
        
+def handleSignup(request):
+    if request.method == 'POST':
+        
+    else:
+        return HttpResponse(' 404 - Not Found')
+       
