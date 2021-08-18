@@ -50,7 +50,12 @@ def handleSignup(request):
         pass2 = request.POST['pass2']
         
         # Check for errorneous inputs
-        # 
+        if len(username) > 10:
+            messages.error(request,"Username must be under 10 characters")
+            return redirect('home')
+        if pass1 != pass2:
+            messages.error(request,"Passwords do not match")
+            return redirect('home')
         # Create the user
         myuser = User.objects.create_user(username,email,pass1)
         myuser.first_name = fname
