@@ -120,6 +120,7 @@ SignUp
       </div>
       <div class="modal-body">
         <form action = '/login' method = 'post'>
+          {% csrf_token %}
   <div class="form-group">
     <label for="username">Username</label>
     <input type="text" class="form-control" id="loginusername" name = "loginusername" placeholder="Choose a unique username" required>
@@ -127,7 +128,7 @@ SignUp
         
            <div class="form-group">
     <label for="pass">Password</label>
-    <input type="password" class="form-control" id="loginpass" name = "loginpass" placeholder="Enter your password" required>
+    <input type="password" class="form-control" id="loginpassword" name = "loginpassword" placeholder="Enter your password" required>
   </div>
  
   
