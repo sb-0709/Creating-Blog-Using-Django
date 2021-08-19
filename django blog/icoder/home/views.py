@@ -73,4 +73,11 @@ def handleSignup(request):
         return redirect('home')
     else:
         return HttpResponse(' 404 - Not Found')
+ def handleLogin(request):
+    return HttpResponse('handleLogin')
+
+def handleLogout(request):
+    return HttpResponse('handleLogout')
+    
+
        
