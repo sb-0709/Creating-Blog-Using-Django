@@ -1,43 +1,86 @@
 {% extends 'base.html' %}
 
 {% block title %} Blogpost{% endblock title %}
-
+{% block blogactive %} Blogactive{% endblock blogactive %}
 {% block body %}
+{% load humanize %}
+{% load extras %}
 <div class="container my-3">
 
-        <h2 class="blog-post-title">{{post.title}}</h2>
-        <p class="blog-post-meta">{{post.timeStamp}} by <a href="/about">{{post.author}}</a></p>
-
-        <p>{{post.content}}</p>
+        <h1 class="blog-post-title">{{post.title}}</h1>
+        <p class="blog-post-meta">{{post.timeStamp}} by <a><font color=green><b>{{post.author}}</b></font></a>  <span>({{post.views}} views)</span></p>       
+        <p>{{post.content | safe}} </p>
         <hr>
-      </div>
-        <div class="container">
-      <h2> Comments</h2>
-      <form action="/blog/postComment" method="post">
-      {% csrf_token %}
-      <input type="text" name="comment" placeholder="Enter comment here">
-      <input type="hidden" name="postSno" value="{{post.sno}}" >
-      <input type="submit" value="Submit">
-     </form>
+</div>
+<div class="container">
+    <h2> Comments ({{comments.count}})</h2>
+    <div class="my-2">
+    {%if user.is_authenticated%}
+       <form action="/blog/postComment" method="post">
+          {% csrf_token %}   
+        <div class="mb-3">
+          <label for="exampleInputEmail1" class="form-label">Post Comment</label>
+          <input type="text" class="form-control" name="comment" placeholder="Enter comment here">
+        </div> 
+        <input type="hidden" name="postSno" value="{{post.sno}}" >
+        <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+    {%else%}
+      <p> Please Login to Post Comments! </p>
+    {%endif%}
+   
+    </div>
+    {% for comment in comments %}
+
       <div class="row my-3">
-      <div class="col-md-2 ">Image here</div>
-      <div class="col-md-10  ">Comment here</div>
-      </div>
-      <div class="row my-3">
-      <div class="col-md-2 ">Image here</div>
-      <div class="col-md-10  ">Comment here</div>
-      </div>
-      <div class="row my-3">
-      <div class="col-md-2 ">Image here</div>
-      <div class="col-md-10  ">Comment here</div>
-      </div>
-      <div class="row my-3">
-      <div class="col-md-2 ">Image here</div>
-      <div class="col-md-10  ">Comment here</div>
-      </div>
-      <div class="row my-3">
-      <div class="col-md-2 ">Image here</div>
-      <div class="col-md-10  ">Comment here</div>
-      </div>
+          
+        <div class="col-md-10 ">
+          <b><font color="green">{{comment.user.username}}  </font></b>
+          <font size="-1.5">  ({{comment.timestamp | naturaltime}})</font>
+          <div>{{comment.comment}}</div>
+           <div class="reply mx-0">
+           {%if user.is_authenticated%}
+             <button class="btn btn-sm btn-success" type="button" data-toggle="collapse" data-target="#replyBox{{comment.sno}}" aria-expanded="false" aria-controls="replyBox{{comment.sno}}">
+               Reply
+              </button>
+              
+              <div class="collapse" id="replyBox{{comment.sno}}">
+               <div class="card card-body">
+                   <form action="/blog/postComment" method="post">
+          {% csrf_token %}   
+        <div class="mb-3">
+          <label for="comment" class="form-label">Post Comment</label>
+          <input type="text" class="form-control" name="comment" placeholder="Reply here...">
+          <input type="hidden" name="parentSno" value="{{comment.sno}}">
+        </div> 
+        <input type="hidden" name="postSno" value="{{post.sno}}" >
+        <input type="hidden" name="parentSno" value="">
+        <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+              </div>
+              </div>
+              {%else %}
+              <button class="btn btn-sm btn-success" type="button" data-toggle="collapse" data-target="#replyBox{{comment.sno}}" aria-expanded="false" aria-controls="replyBox{{comment.sno}} disabled">Login to Reply </button>
+              {% endif%}
+
+              <div class="replies my-2">
+              {% for reply in replyDict|get_val:comment.sno %}
+                <div class="row my-2">
+                  <div class="col-md-11">    
+                    
+                    <b><font color="green">{{reply.user.username}}  </font></b>
+          <font size="-1.5">  ({{reply.timestamp | naturaltime}})</font>
+          <div>{{reply.comment}}</div>
+                </div>
+                </div>
+              {% endfor %}
+               
+              </div>
+           </div>
+        </div>
+       </div>
+
+      {% endfor %}
+     
       </div>
  {% endblock %}

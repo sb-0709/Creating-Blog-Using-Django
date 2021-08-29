@@ -8,6 +8,7 @@ class Post(models.Model):
     title=models.CharField(max_length=255)
     author=models.CharField(max_length=14)
     slug=models.CharField(max_length=130)
+    views= models.IntegerField(default=0)
     timeStamp=models.DateTimeField(blank=True)
     content=models.TextField()
 
@@ -26,4 +27,3 @@ class BlogComment(models.Model):
     def __str__(self):
         return self.comment[0:13] + "..." + "by" + " " + self.user.username
     
-
